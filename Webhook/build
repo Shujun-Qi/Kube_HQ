@@ -1,0 +1,75 @@
+#!/bin/bash
+
+: ${DOCKER_USER:? required}
+
+export GO111MODULE=on 
+export GOPROXY=https://goproxy.cn
+# build webhook
+CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o admission-webhook-example 
+# build docker image
+docker build --no-cache -t iqicheng/admission-webhook-example:v1 .
+# rm -rf admission-webhook-example
+
+docker push iqicheng/admission-webhook-example:v1
+
+
+curl -k --cert ./client.crt.pem --cert-type PEM --key ./client.key.pem --key-type PEM --pass drogonkaight -X POST -H 'Accept: application/json' \
+-H 'Content-Type: application/json' \
+http://localhost:8080/api/v1/namespaces/default/pods <<'EOF'
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "name": "nginx1"
+    },
+    "spec": {
+        "containers": [
+            {
+                "name": "nginx",
+                "image": "nginx:1.7.9",
+                "ports": [
+                    {
+                        "containerPort": 80
+                    }
+                ]
+            }
+        ]
+    }
+}
+EOF
+ --data '
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx1
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.7.9
+    ports:
+    - containerPort: 80
+' "http://localhost:8080/api/v1/namespaces/default/pods"
+
+
+Kubernetes handles images 
+
+
+safe configurations workflow/pipeline (same image?)
+pod checks limitations checks required
+concrete examples 
+
+Kube security overview: https://kubernetes.io/docs/concepts/security/
+
+pod security: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+
+attestation looks like in sgx
+related work and our work 
+finish the workflow 
+cloud enclave model file io
+
+
+outsource
+headquarter using sgx?
+ironclad lab datalog engine nested fetching tool  proof verifing code oidi
+explain how the structure match to outsource infrastructure

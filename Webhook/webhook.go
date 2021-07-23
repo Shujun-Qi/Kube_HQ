@@ -50,6 +50,10 @@ var (
 		partOfLabel:    NA,
 		managedByLabel: NA,
 	}
+
+	validContainers = []string{
+		
+	}
 )
 
 const (
@@ -192,12 +196,27 @@ func (whsvr *WebhookServer) validate(ar *v1beta1.AdmissionReview) *v1beta1.Admis
 		availableLabels                 map[string]string
 		objectMeta                      *metav1.ObjectMeta
 		resourceNamespace, resourceName string
+		containerName 					string
 	)
 
 	glog.Infof("AdmissionReview for Kind=%v, Namespace=%v Name=%v (%v) UID=%v patchOperation=%v UserInfo=%v",
 		req.Kind, req.Namespace, req.Name, resourceName, req.UID, req.Operation, req.UserInfo)
 
 	switch req.Kind.Kind {
+	case "Pod":
+		var pod corev1.Pod
+		if err := json.Unmarshal(req.Object.Raw, &pod); err != nil {
+			glog.Errorf("Could not unmarshal raw object: %v", err)
+			return &v1beta1.AdmissionResponse{
+				Result: &metav1.Status{
+					Message: err.Error(),
+				},
+			}
+		}
+		resourceName, resourceNamespace, objectMeta = pod.Name, pod.Namespace, &pod.ObjectMeta
+		containerName = pod.Spec.Containers[0].Name
+		glog.Info("container:", containerName)
+		availableLabels = pod.Labels
 	case "Deployment":
 		var deployment appsv1.Deployment
 		if err := json.Unmarshal(req.Object.Raw, &deployment); err != nil {

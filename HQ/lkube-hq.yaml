@@ -1,0 +1,43 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: lkube-hq
+spec:
+  selector:
+    role: hq
+  ports:
+
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 5000
+
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 5000
+
+---
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: lkube-hq-pod
+  labels:
+    role: hq
+spec:
+  volumes:
+    - name: nfs-volume
+      nfs: 
+
+        server: 10.102.93.143
+        path: /  
+  containers:
+    - name: lkube-hq-container
+      image: iqicheng/lkube-hq
+      volumeMounts:
+        - name: nfs-volume
+          mountPath: /nfs
+      securityContext:
+        privileged: true
+      

@@ -1,0 +1,45 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: user-pod
+spec:
+  volumes:
+    - name: nfs-volume
+      nfs: 
+        server: 10.102.93.143
+        path: /user100
+
+  securityContext:
+    fsGroup: 100
+    runAsGroup: 100
+    runAsUser: 405
+
+  restartPolicy: Never
+
+  initContainers:
+    - name: init-con
+      image: iqicheng/scout
+      securityContext:
+        runAsUser: 0
+
+      volumeMounts:
+        - name: nfs-volume
+          mountPath: /nfs
+
+      command: ["/bin/sh"]
+      args: ["-c", 'chmod 775 /nfs; chgrp 100 /nfs; apt-get update; apt-get install curl -y ; res=$(curl -X POST 10.96.226.150 -d "url=128.110.155.54:5000&userid=10&secret=gAAAAABfuBzJM3Vyi8OpD28U3DG1bmzIiaTmqmvx0RBuVKd7_w8sqGE3WYBsCdyKHnZV4Aba7wxdql5t1wOGQZrpUGZrvT1cww==" );  if [ "$res" = "True" ]; then echo $res; exit 0; else echo $res; exit 1; fi']
+      # command:
+      #   - /bin/sh
+      # if $res=="Hello World!"; then exit 0; else exit 1; fi
+      #   - chmod 775 /var/nfs
+
+  containers:
+    - name: user-con
+      image: iqicheng/lkube_hq
+
+      volumeMounts:
+        - name: nfs-volume
+          mountPath: /nfs
+
+      command: ["/bin/sh"]
+      args: ["-c", "cat /nfs/data.txt"]

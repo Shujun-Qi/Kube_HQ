@@ -40,7 +40,7 @@ sudo swapoff -a
 sudo kubeadm reset -y
 
 # sudo cp ~/kube-apiserver.yaml /etc/kubernetes/manifests/
-sudo cp ~/cilogon-basic.crt /etc/kubernetes/pki/
+sudo cp ca.crt /etc/kubernetes/pki/
 
 sudo kubeadm init --pod-network-cidr "10.244.0.0/16" 
 # sudo kubeadm init --config "/etc/KubeHQ.conf"

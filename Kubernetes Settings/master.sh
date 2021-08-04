@@ -57,4 +57,5 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sudo kubectl apply -f https://docs.projectcalico.org/manifests/canal.yaml
 
 sudo cp ca.crt /etc/kubernetes/pki/ca.crt
+sudo systemctl daemon-reload
 sudo systemctl restart kubelet

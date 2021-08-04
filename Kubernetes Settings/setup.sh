@@ -1,6 +1,6 @@
-# sudo cp ca.crt /etc/kubernetes/pki/ca.crt
-# sudo systemctl daemon-reload
-# sudo systemctl restart kubelet
+sudo cp ca.crt /etc/kubernetes/pki/ca.crt
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
 
 sudo ../Webhook/deployment/webhook-create-signed-cert.sh
 sudo kubectl get secret admission-webhook-example-certs

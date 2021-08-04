@@ -37,10 +37,10 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 sudo swapoff -a
 
-sudo kubeadm reset -y
+# sudo kubeadm reset -y
 
 # sudo cp ~/kube-apiserver.yaml /etc/kubernetes/manifests/
-sudo cp -f ca.crt /etc/kubernetes/pki/ca.crt
+
 
 sudo kubeadm init --pod-network-cidr "10.244.0.0/16" 
 # sudo kubeadm init --config "/etc/KubeHQ.conf"
@@ -56,3 +56,5 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 sudo kubectl apply -f https://docs.projectcalico.org/manifests/canal.yaml
 
+sudo cp ca.crt /etc/kubernetes/pki/ca.crt
+sudo systemctl restart kubelet

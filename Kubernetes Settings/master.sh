@@ -37,7 +37,7 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 sudo swapoff -a
 
-# sudo kubeadm reset -y
+sudo kubeadm reset
 
 # sudo cp ~/kube-apiserver.yaml /etc/kubernetes/manifests/
 

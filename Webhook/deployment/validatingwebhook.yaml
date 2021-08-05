@@ -11,14 +11,15 @@ webhooks:
         name: admission-webhook-example-svc
         namespace: default
         path: "/validate"
+        port: 443
       caBundle: ${CA_BUNDLE}
     rules:
       - operations: [ "CREATE" ]
         apiGroups: ["apps", ""]
         apiVersions: ["v1"]
         resources: ["deployments","services"]
-    namespaceSelector:
-      matchLabels:
-        admission-webhook-example: enabled
+    # namespaceSelector:
+    #   matchLabels:
+    #     admission-webhook-example: enabled
     admissionReviewVersions: ["v1", "v1beta1"]
     sideEffects: None

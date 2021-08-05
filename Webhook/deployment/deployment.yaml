@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: admission-webhook-example
-          image: cnych/admission-webhook-example:v1
+          image: iqicheng/admission-webhook-example:v1
           imagePullPolicy: Always
           args:
             - -tlsCertFile=/etc/webhook/certs/cert.pem

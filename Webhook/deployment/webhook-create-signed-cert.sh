@@ -83,15 +83,15 @@ kubectl delete csr ${csrName} 2>/dev/null || true
 
 # create  server cert/key CSR and  send to k8s API
 cat <<EOF | kubectl create -f -
-apiVersion: certificates.k8s.io/v1
+apiVersion: certificates.k8s.io/v1beta1
 kind: CertificateSigningRequest
 metadata:
   name: ${csrName}
 spec:
   groups:
-  - system:authenticated
+  - system:nodes
   request: $(cat ${tmpdir}/server.csr | base64 | tr -d '\n')
-  signerName: kubernetes.io/legacy-unknown
+  
   usages:
   - digital signature
   - key encipherment

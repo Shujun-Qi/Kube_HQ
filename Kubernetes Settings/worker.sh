@@ -33,8 +33,16 @@ net.bridge.bridge-nf-call-iptables = 1
 EOF
 sudo sysctl --system
 
-dockercgs = '{"exec-opts": ["native.cgroupdriver=systemd"]}'
-sudo echo $dockercgs > /etc/docker/daemon.json
+cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
 sudo systemctl restart docker
 
 sudo apt-get update

@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: KubeHQ
+  name: kubehq
   labels:
-    app: KubeHQ
+    app: kubehq
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: KubeHQ
+      app: kubehq
   template:
     metadata:
       labels:
-        app: KubeHQ
+        app: kubehq
     spec:
       containers:
-        - name: KubeHQ
+        - name: kubehq
           image: iqicheng/admission-webhook-example:v1
           imagePullPolicy: Always
           args:

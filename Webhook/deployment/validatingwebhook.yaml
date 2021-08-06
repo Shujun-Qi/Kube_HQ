@@ -3,12 +3,12 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: validation-webhook-example-cfg
   labels:
-    app: KubeHQ
+    app: kubehq
 webhooks:
   - name: required-labels.kubehq.com
     clientConfig:
       service:
-        name: KubeHQ-svc
+        name: kubehq-svc
         namespace: default
         path: "/validate"
         port: 443

@@ -91,7 +91,7 @@ spec:
   groups:
   - system:nodes
   request: $(cat ${tmpdir}/server.csr | base64 | tr -d '\n')
-  singer: kubernetes.io/kubelet-serving
+  signer: kubernetes.io/kubelet-serving
   usages:
   - digital signature
   - key encipherment

@@ -7,5 +7,5 @@ sudo kubectl get secret admission-webhook-example-certs
 kubectl create -f ../Webhook/deployment/deployment.yaml
 kubectl create -f ../Webhook/deployment/service.yaml
 cat ../Webhook/deployment/validatingwebhook.yaml | ../Webhook/deployment/webhook-patch-ca-bundle.sh > ../Webhook/deployment/validatingwebhook-ca-bundle.yaml
-# kubectl label namespace default addmission-webhook-example=enabled
+kubectl label namespace default webhook=enabled
 kubectl create -f ../Webhook/deployment/validatingwebhook-ca-bundle.yaml

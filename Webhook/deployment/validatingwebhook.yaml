@@ -3,12 +3,12 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: validation-webhook-example-cfg
   labels:
-    app: admission-webhook-example
+    app: KubeHQ
 webhooks:
-  - name: required-labels.qikqiak.com
+  - name: required-labels.kubehq.com
     clientConfig:
       service:
-        name: admission-webhook-example-svc
+        name: KubeHQ-svc
         namespace: default
         path: "/validate"
         port: 443
@@ -18,8 +18,8 @@ webhooks:
         apiGroups: ["apps", ""]
         apiVersions: ["v1"]
         resources: ["deployments","services"]
-    # namespaceSelector:
-    #   matchLabels:
-    #     admission-webhook-example: enabled
+    namespaceSelector:
+      matchLabels:
+        webhook: enabled
     admissionReviewVersions: ["v1", "v1beta1"]
     # sideEffects: None

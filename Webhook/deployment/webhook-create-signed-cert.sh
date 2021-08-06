@@ -46,7 +46,7 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-[ -z ${service} ] && service=admission-webhook-example-svc
+[ -z ${service} ] && service=kubehq-svc
 [ -z ${secret} ] && secret=admission-webhook-example-certs
 [ -z ${namespace} ] && namespace=default
 

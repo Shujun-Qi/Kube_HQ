@@ -1,5 +1,5 @@
 sudo swapoff -a
-
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
 sudo apt-get update
 
 sudo apt-get install \

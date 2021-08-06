@@ -33,6 +33,10 @@ net.bridge.bridge-nf-call-iptables = 1
 EOF
 sudo sysctl --system
 
+dockercgs = '{"exec-opts": ["native.cgroupdriver=systemd"]}'
+sudo echo $dockercgs > /etc/docker/daemon.json
+sudo systemctl restart docker
+
 sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl
 sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg

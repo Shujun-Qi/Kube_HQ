@@ -1,4 +1,4 @@
-apiVersion: admissionregistration.k8s.io/v1beta1
+apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: validation-webhook-example-cfg
@@ -22,4 +22,4 @@ webhooks:
       matchLabels:
         webhook: enabled
     admissionReviewVersions: ["v1", "v1beta1"]
-    # sideEffects: None
+    sideEffects: None

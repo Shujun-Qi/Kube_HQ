@@ -33,7 +33,8 @@ net.bridge.bridge-nf-call-iptables = 1
 EOF
 sudo sysctl --system
 
-cat > /etc/docker/daemon.json <<EOF
+sudo mkdir /etc/docker
+cat <<EOF | sudo tee /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
@@ -43,6 +44,8 @@ cat > /etc/docker/daemon.json <<EOF
   "storage-driver": "overlay2"
 }
 EOF
+sudo systemctl enable docker
+sudo systemctl daemon-reload
 sudo systemctl restart docker
 
 sudo apt-get update

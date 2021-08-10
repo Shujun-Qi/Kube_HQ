@@ -73,3 +73,6 @@ docker push iqicheng/admission-webhook-example:v1
 # headquarter using sgx?
 # ironclad lab datalog engine nested fetching tool  proof verifing code oidi
 # explain how the structure match to outsource infrastructure
+
+#debugging webhook 
+#mr signerName

@@ -15,6 +15,32 @@ spec:
         app: kubehq
     spec:
       containers:
+        - name: riak
+          image: iqicheng/riak:latest
+          ports:
+              - containerPort: 8098
+              - containerPort: 8087
+          # command: ["tail", "-f"]
+          args: ["tail", "-f", "/dev/null"]
+
+        - name: safe
+          image: iqicheng/safe:latest
+          # volumeMounts:
+          # - name: shared-data
+          #   mountPath: /pod-data
+          # command: ["tail","-f"]
+          args: ["tail", "-f","/dev/null"]
+          env:
+              - name: RIAK_IP
+                value: riak
+              - name: SLANG_CONF
+                value: strong/strong.conf.slang
+              - name: SLANG_SCRIPT
+                value: cloud-attestation/config.slang
+              - name: STRONG_ROOT_PUB
+                value: strong-1.pub
+          ports:
+              - containerPort: 7777
         - name: kubehq
           image: iqicheng/admission-webhook-example:v1
           imagePullPolicy: Always
@@ -24,6 +50,9 @@ spec:
             - -alsologtostderr
             - -v=4
             - 2>&1
+          env:
+            - name: SAFE_IP
+              value: safe
           volumeMounts:
             - name: webhook-certs
               mountPath: /etc/webhook/certs

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kubehq
+  name: kubehq-deployment
   labels:
     app: kubehq
 spec:
@@ -32,7 +32,7 @@ spec:
           args: ["tail", "-f","/dev/null"]
           env:
               - name: RIAK_IP
-                value: riak
+                value: localhost
               - name: SLANG_CONF
                 value: strong/strong.conf.slang
               - name: SLANG_SCRIPT
@@ -52,7 +52,7 @@ spec:
             - 2>&1
           env:
             - name: SAFE_IP
-              value: safe
+              value: localhost
           volumeMounts:
             - name: webhook-certs
               mountPath: /etc/webhook/certs

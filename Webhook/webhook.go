@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+
 	// "os"
 	// "log"
 
@@ -16,9 +17,9 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+
 	// "k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
-	"k8s.io/kubernetes/pkg/apis/core/v1"
 )
 
 var (
@@ -52,9 +53,7 @@ var (
 		managedByLabel: NA,
 	}
 
-	validContainers = []string{
-		
-	}
+	validContainers = []string{}
 )
 
 const (
@@ -95,7 +94,7 @@ func init() {
 	_ = admissionregistrationv1.AddToScheme(runtimeScheme)
 	// defaulting with webhooks:
 	// https://github.com/kubernetes/kubernetes/issues/57982
-	_ = v1.AddToScheme(runtimeScheme)
+	// _ = admv1.AddToScheme(runtimeScheme)
 }
 
 func admissionRequired(ignoredList []string, admissionAnnotationKey string, metadata *metav1.ObjectMeta) bool {
@@ -197,7 +196,7 @@ func (whsvr *WebhookServer) validate(ar *admv1.AdmissionReview) *admv1.Admission
 		availableLabels                 map[string]string
 		objectMeta                      *metav1.ObjectMeta
 		resourceNamespace, resourceName string
-		containerName 					string
+		containerName                   string
 	)
 	// glog.Info("ar:",ar)
 	glog.Infof("AdmissionReview for Kind=%v, Namespace=%v Name=%v (%v) UID=%v patchOperation=%v UserInfo=%v",
@@ -216,32 +215,32 @@ func (whsvr *WebhookServer) validate(ar *admv1.AdmissionReview) *admv1.Admission
 		}
 		resourceName, resourceNamespace, objectMeta = pod.Name, pod.Namespace, &pod.ObjectMeta
 		containerName = pod.Spec.Containers[0].Name
-		glog.Info("container:", containerName)
+		glog.Info(pod.Spec)
 		availableLabels = pod.Labels
-	case "Deployment":
-		var deployment appsv1.Deployment
-		if err := json.Unmarshal(req.Object.Raw, &deployment); err != nil {
-			glog.Errorf("Could not unmarshal raw object: %v", err)
-			return &admv1.AdmissionResponse{
-				Result: &metav1.Status{
-					Message: err.Error(),
-				},
-			}
-		}
-		resourceName, resourceNamespace, objectMeta = deployment.Name, deployment.Namespace, &deployment.ObjectMeta
-		availableLabels = deployment.Labels
-	case "Service":
-		var service corev1.Service
-		if err := json.Unmarshal(req.Object.Raw, &service); err != nil {
-			glog.Errorf("Could not unmarshal raw object: %v", err)
-			return &admv1.AdmissionResponse{
-				Result: &metav1.Status{
-					Message: err.Error(),
-				},
-			}
-		}
-		resourceName, resourceNamespace, objectMeta = service.Name, service.Namespace, &service.ObjectMeta
-		availableLabels = service.Labels
+		// case "Deployment":
+		// 	var deployment appsv1.Deployment
+		// 	if err := json.Unmarshal(req.Object.Raw, &deployment); err != nil {
+		// 		glog.Errorf("Could not unmarshal raw object: %v", err)
+		// 		return &admv1.AdmissionResponse{
+		// 			Result: &metav1.Status{
+		// 				Message: err.Error(),
+		// 			},
+		// 		}
+		// 	}
+		// 	resourceName, resourceNamespace, objectMeta = deployment.Name, deployment.Namespace, &deployment.ObjectMeta
+		// 	availableLabels = deployment.Labels
+		// case "Service":
+		// 	var service corev1.Service
+		// 	if err := json.Unmarshal(req.Object.Raw, &service); err != nil {
+		// 		glog.Errorf("Could not unmarshal raw object: %v", err)
+		// 		return &admv1.AdmissionResponse{
+		// 			Result: &metav1.Status{
+		// 				Message: err.Error(),
+		// 			},
+		// 		}
+		// 	}
+		// 	resourceName, resourceNamespace, objectMeta = service.Name, service.Namespace, &service.ObjectMeta
+		// 	availableLabels = service.Labels
 	}
 
 	if !validationRequired(ignoredNamespaces, objectMeta) {
@@ -253,17 +252,18 @@ func (whsvr *WebhookServer) validate(ar *admv1.AdmissionReview) *admv1.Admission
 
 	allowed := true
 	var result *metav1.Status
-	glog.Info("available labels:", availableLabels)
-	glog.Info("required labels", requiredLabels)
-	for _, rl := range requiredLabels {
-		if _, ok := availableLabels[rl]; !ok {
-			allowed = false
-			result = &metav1.Status{
-				Reason: "required labels are not set",
-			}
-			break
-		}
-	}
+	// glog.Info("available labels:", availableLabels)
+	// glog.Info("required labels", requiredLabels)
+	// for _, rl := range requiredLabels {
+	// 	if _, ok := availableLabels[rl]; !ok {
+	// 		allowed = false
+	// 		result = &metav1.Status{
+	// 			Reason: "required labels are not set",
+	// 		}
+	// 		break
+	// 	}
+	// }
+	// glog.Info(Pod.Spec)
 
 	return &admv1.AdmissionResponse{
 		Allowed: allowed,
@@ -381,18 +381,18 @@ func (whsvr *WebhookServer) serve(w http.ResponseWriter, r *http.Request) {
 		} else if r.URL.Path == "/validate" {
 			admissionResponse = whsvr.validate(&ar)
 		}
-		
+
 	}
 	glog.Info("ar:", ar)
 
 	admissionReview := admv1.AdmissionReview{
 		metav1.TypeMeta{
-			Kind: "AdmissionReview",
+			Kind:       "AdmissionReview",
 			APIVersion: "admission.k8s.io/v1",
 		},
 		nil,
 		nil,
-		}
+	}
 	glog.Info("review:", admissionReview)
 	if admissionResponse != nil {
 		admissionReview.Response = admissionResponse

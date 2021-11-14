@@ -17,7 +17,7 @@ webhooks:
       - operations: [ "CREATE" ]
         apiGroups: ["apps", ""]
         apiVersions: ["v1","v1beta1"]
-        resources: ["deployments","services"]
+        resources: ["deployments","services"，“pods"]
     namespaceSelector:
       matchLabels:
         webhook: enabled

@@ -243,12 +243,12 @@ func (whsvr *WebhookServer) validate(ar *admv1.AdmissionReview) *admv1.Admission
 		// 	availableLabels = service.Labels
 	}
 
-	if !validationRequired(ignoredNamespaces, objectMeta) {
-		glog.Infof("Skipping validation for %s/%s due to policy check", resourceNamespace, resourceName)
-		return &admv1.AdmissionResponse{
-			Allowed: true,
-		}
-	}
+	// if !validationRequired(ignoredNamespaces, objectMeta) {
+	// 	glog.Infof("Skipping validation for %s/%s due to policy check", resourceNamespace, resourceName)
+	// 	return &admv1.AdmissionResponse{
+	// 		Allowed: true,
+	// 	}
+	// }
 
 	allowed := true
 	var result *metav1.Status

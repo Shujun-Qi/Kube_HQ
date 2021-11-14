@@ -196,7 +196,7 @@ func (whsvr *WebhookServer) validate(ar *admv1.AdmissionReview) *admv1.Admission
 		availableLabels                 map[string]string
 		objectMeta                      *metav1.ObjectMeta
 		resourceNamespace, resourceName string
-		containerName                   string
+		// containerName                   string
 	)
 	// glog.Info("ar:",ar)
 	glog.Infof("AdmissionReview for Kind=%v, Namespace=%v Name=%v (%v) UID=%v patchOperation=%v UserInfo=%v",
@@ -214,9 +214,15 @@ func (whsvr *WebhookServer) validate(ar *admv1.AdmissionReview) *admv1.Admission
 			}
 		}
 		resourceName, resourceNamespace, objectMeta = pod.Name, pod.Namespace, &pod.ObjectMeta
-		containerName = pod.Spec.Containers[0].Name
-		glog.Info(pod.Spec)
+		// containerName = pod.Spec.Containers[0].Name
+
 		availableLabels = pod.Labels
+		glog.Info(pod.Spec)
+		glog.Info("name:", resourceName)
+		glog.Info("namespace:", resourceNamespace)
+		// glog.Info()
+		glog.Info(objectMeta)
+		glog.Info(availableLabels)
 		// case "Deployment":
 		// 	var deployment appsv1.Deployment
 		// 	if err := json.Unmarshal(req.Object.Raw, &deployment); err != nil {
@@ -250,8 +256,9 @@ func (whsvr *WebhookServer) validate(ar *admv1.AdmissionReview) *admv1.Admission
 	// 	}
 	// }
 
-	allowed := true
+	allowed := false
 	var result *metav1.Status
+	glog.Info("res:", req.Kind.Kind)
 	// glog.Info("available labels:", availableLabels)
 	// glog.Info("required labels", requiredLabels)
 	// for _, rl := range requiredLabels {

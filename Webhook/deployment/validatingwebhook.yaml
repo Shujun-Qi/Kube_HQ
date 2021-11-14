@@ -5,7 +5,7 @@ metadata:
   labels:
     app: kubehq
 webhooks:
-  - name: KubeHQ
+  - name: kubehq
     clientConfig:
       service:
         name: kubehq-svc

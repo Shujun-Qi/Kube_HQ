@@ -86,8 +86,8 @@ sudo apt-mark hold kubelet kubeadm kubectl
 # sudo cp ~/kube-apiserver.yaml /etc/kubernetes/manifests/
 
 
-sudo kubeadm init --pod-network-cidr "10.244.0.0/16" 
-# sudo kubeadm init --config "/etc/KubeHQ.conf"
+# sudo kubeadm init --pod-network-cidr "10.244.0.0/16" 
+sudo kubeadm init --config "kube-config.yaml"
 
 
 

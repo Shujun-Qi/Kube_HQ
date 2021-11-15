@@ -5,6 +5,5 @@ apiServer:
     oidc-issuer-url: https://cilogon.org
     oidc-username-claim: email
     oidc-client-id: KubeHQv1
-    oidc-ca-file: /root/myCA.pem
 networking:
   podSubnet: 10.244.0.0/16
